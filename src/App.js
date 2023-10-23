@@ -104,17 +104,17 @@ const onChange = evt => {
 
 // console.log(evt)
 
-//   if (evt.target.id === 'name-input') {
-//     setValues((prevState) =>({...prevState, name: evt.target.value }))
-//     validateChange(evt.target)
-//   }
-//   if (evt.target.id === 'size-dropdown') {
-//     setValues((prevState) =>({...prevState, size: evt.target.value}))
-//   }
+  if (evt.target.id === 'name-input') {
+    setValues((prevState) =>({...prevState, name: evt.target.value }))
+    validateChange(evt.target)
+  }
+  if (evt.target.id === 'size-dropdown') {
+    setValues((prevState) =>({...prevState, size: evt.target.value}))
+  }
 
-//   if (evt.target.id ==='special-text') {
-//     setValues((prevState) =>({...prevState, specialText: evt.target.value}))
-//   }
+  if (evt.target.id ==='special-text') {
+    setValues((prevState) =>({...prevState, specialText: evt.target.value}))
+  }
 
 
   }
