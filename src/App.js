@@ -13,37 +13,41 @@ const errorMessage = {
 }
 
 const initialErrors = {
-  name: '',
+  username: '',
   size: '',
   specialText: '',
 }
 
 const initialFormValues = {
-  name: '',
+  username: '',
   size: '',
+  pepperoni: '',
+  mushrooms: '',
+  onions: '',
+  extracheese:'',
   specialText: '',
 }
 
-const userSchema = yup.object().shape({
-  'name-input': yup
-  .string()
-  .trim()
-  // .required(errorMessage.usernameRequired)
-  .min(2, errorMessage.usernameMin),
-  // 'size-dropdown': yup
-  // .oneOf(['','small', 'medium', 'large']),
-  // 'special-text': yup
-  // .string()
-  // .trim(),
-  // 'onion':yup
-  // .boolean(),
-  // 'pepperoni':yup
-  // .boolean(),
-  // 'mushrooms':yup
-  // .boolean(),
-  // 'extra-cheese':yup
-  // .boolean()
-})
+// const userSchema = yup.object().shape({
+//   username : yup
+//   .string()
+//   .trim()
+//   // .required(errorMessage.usernameRequired)
+//   .min(2, errorMessage.usernameMin),
+//   // 'size-dropdown': yup
+//   // .oneOf(['','small', 'medium', 'large']),
+//   // 'special-text': yup
+//   // .string()
+//   // .trim(),
+//   // 'onion':yup
+//   // .boolean(),
+//   // 'pepperoni':yup
+//   // .boolean(),
+//   // 'mushrooms':yup
+//   // .boolean(),
+//   // 'extra-cheese':yup
+//   // .boolean()
+// })
 
 function Home(props) {
   return <h2 style={{ ...style, borderColor: 'red'}}>The Home Screen</h2>
@@ -73,19 +77,19 @@ const [values, setValues] = useState(initialFormValues)
 
 const [formErrors, setFormErrors] = useState(initialErrors)
 
-const validateChange = (evt) => {
-  yup
-    .reach(userSchema, evt.target.name)
-    .validate(
-      evt.target.value
-    )
-    .then(() => {
-      setFormErrors({ ...formErrors, [evt.target.name]: "" });
-    })
-    .catch((error) => {
-      setFormErrors({ ...formErrors, [evt.target.name]: error.errors[0] });
-    });
-};
+// const validateChange = (evt) => {
+//   yup
+//     .reach(userSchema, evt.target.name)
+//     .validate(
+//       evt.target.value
+//     )
+//     .then(() => {
+//       setFormErrors({ ...formErrors, [evt.target.name]: "" });
+//     })
+//     .catch((error) => {
+//       setFormErrors({ ...formErrors, [evt.target.name]: error.errors[0] });
+//     });
+// };
 // function validate (evt) {
 // yup.reach(userSchema, evt.target.name).validate(values)
 //       .then(() => setFormErrors({ ...formErrors, [evt.target.name]: ''}))
@@ -93,20 +97,22 @@ const validateChange = (evt) => {
 // }
 
 const onChange = evt => { 
-  evt.persist();
-    validateChange(evt);
-    setValues({
-      ...values,
-      [evt.target.name]:
-        evt.target.type === "checkbox" ? evt.target.checked : evt.target.value,
-    });
-// let { type, name, value, checked} = evt.target
+  // evt.persist();
+  //   validateChange(evt);
+  //   setValues({
+  //     ...values,
+  //     [evt.target.name]:
+  //       evt.target.type === "checkbox" ? evt.target.checked : evt.target.value,
+  //   });
+let { type, name, value, checked} = evt.target
+
+value = type == 'checkbox' ? checked : value
 
 // console.log(evt)
 
   if (evt.target.id === 'name-input') {
-    setValues((prevState) =>({...prevState, name: evt.target.value }))
-    validateChange(evt.target)
+    setValues((prevState) =>({...prevState, username: evt.target.value }))
+    // validateChange(evt.target)
   }
   if (evt.target.id === 'size-dropdown') {
     setValues((prevState) =>({...prevState, size: evt.target.value}))
@@ -115,21 +121,20 @@ const onChange = evt => {
   if (evt.target.id ==='special-text') {
     setValues((prevState) =>({...prevState, specialText: evt.target.value}))
   }
-
+  setValues({...values, [name]: value })
 
   }
 
   function Order(props) {
     const onSubmit = evt => {
       evt.preventDefault()
-    //   axios.post('https://reqres.in/api/orders', values)
-    //     .then(res => {
-    //       
-    //     })
-    //     .catch(err => {
-    //       setServerFailure(err.response.data.message)
-    //       setServerSuccess()
-    //     })
+      axios.post('https://reqres.in/api/orders', values)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
 
     return (
@@ -166,6 +171,8 @@ const onChange = evt => {
           <div>
             <label>
               <input 
+              checked = {values.pepperoni}
+              onChange = {onChange}
               name = "pepperoni"
               value = "pepperoni"
               type="checkbox" />
@@ -173,6 +180,8 @@ const onChange = evt => {
             </label>
             <label>
               <input
+              // checked = {values.checklistItems[1]}
+              onChange = {onChange}
               name = "mushrooms"
               value = "mushrooms" 
               type="checkbox" />
@@ -180,13 +189,17 @@ const onChange = evt => {
             </label>
             <label>
               <input
+              // checked = {values.checklistItems[2]}
+              onChange = {onChange}
               value = "onions"
               name = "onions"
               type="checkbox" />
               Onions
             </label>
             <label>
-              <input 
+              <input
+              // checked = {values.checklistItems[3]}
+              onChange = {onChange} 
               name = "extra-cheese"
               value = "extra-cheese"
               type="checkbox" />
