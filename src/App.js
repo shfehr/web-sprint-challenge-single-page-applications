@@ -57,7 +57,7 @@ function Checklist() {
     {id: 1, label: 'Pepperoni', isChecked: false },
     {id: 2, label: 'Onion', isChecked: false }, 
     {id: 3, label: 'Mushrooms', isChecked: false }, 
-    {id: 4, label: 'Banana Peppers', isChecked: false },  
+    {id: 4, label: 'Extra Cheese', isChecked: false },  
   ]);
 
   const handleCheckboxChange = (itemId) => {
@@ -106,22 +106,23 @@ const onChange = evt => {
   //   });
 let { type, name, value, checked} = evt.target
 
-value = type == 'checkbox' ? checked : value
-
+// value = type === 'checkbox' ? checked : value
+console.log(name, value)
+setValues({...values, [name]: value })
 // console.log(evt)
 
-  if (evt.target.id === 'name-input') {
-    setValues((prevState) =>({...prevState, username: evt.target.value }))
-    // validateChange(evt.target)
-  }
-  if (evt.target.id === 'size-dropdown') {
-    setValues((prevState) =>({...prevState, size: evt.target.value}))
-  }
+  // if (evt.target.id === 'name-input') {
+  //   setValues((prevState) =>({...prevState, username: evt.target.value }))
+  //   // validateChange(evt.target)
+  // }
+  // if (evt.target.id === 'size-dropdown') {
+  //   setValues((prevState) =>({...prevState, size: evt.target.value}))
+  // }
 
-  if (evt.target.id ==='special-text') {
-    setValues((prevState) =>({...prevState, specialText: evt.target.value}))
-  }
-  setValues({...values, [name]: value })
+  // if (evt.target.id ==='special-text') {
+  //   setValues((prevState) =>({...prevState, specialText: evt.target.value}))
+  // }
+  // setValues({...values, [name]: value })
 
   }
 
@@ -130,7 +131,7 @@ value = type == 'checkbox' ? checked : value
       evt.preventDefault()
       axios.post('https://reqres.in/api/orders', values)
         .then(response => {
-          console.log(response)
+          console.log(response.data)
         })
         .catch(error => {
           console.error(error)
@@ -143,6 +144,7 @@ value = type == 'checkbox' ? checked : value
       
       <div>
         <h2>Build your own pizza here!</h2>
+        <p>{values.username}</p>
         <form  onSubmit={onSubmit} id="pizza-form">
           <div>
             <label>Name for order: <br />
@@ -150,7 +152,7 @@ value = type == 'checkbox' ? checked : value
                 value = {values.username}
                 onChange = {onChange}
                 id="name-input" 
-                name="name-input" 
+                name="username" 
                 type="text" 
                 placeholder="Type Name" />
                 <br />
@@ -159,7 +161,7 @@ value = type == 'checkbox' ? checked : value
             <label>Size of pizza: <br /></label>
               <select
                 value = {values.size}
-                onChange = {onChange}
+                // onChange = {onChange}
                 id="size-dropdown" 
                 name="size-dropdown">
                 <option value="">-- Select Size --</option>
@@ -172,7 +174,7 @@ value = type == 'checkbox' ? checked : value
             <label>
               <input 
               checked = {values.pepperoni}
-              onChange = {onChange}
+              // onChange = {onChange}
               name = "pepperoni"
               value = "pepperoni"
               type="checkbox" />
@@ -180,8 +182,8 @@ value = type == 'checkbox' ? checked : value
             </label>
             <label>
               <input
-              // checked = {values.checklistItems[1]}
-              onChange = {onChange}
+              checked = {values.mushrooms}
+              // onChange = {onChange}
               name = "mushrooms"
               value = "mushrooms" 
               type="checkbox" />
@@ -189,8 +191,8 @@ value = type == 'checkbox' ? checked : value
             </label>
             <label>
               <input
-              // checked = {values.checklistItems[2]}
-              onChange = {onChange}
+              checked = {values.onions}
+              // onChange = {onChange}
               value = "onions"
               name = "onions"
               type="checkbox" />
@@ -198,10 +200,10 @@ value = type == 'checkbox' ? checked : value
             </label>
             <label>
               <input
-              // checked = {values.checklistItems[3]}
-              onChange = {onChange} 
-              name = "extra-cheese"
-              value = "extra-cheese"
+              checked = {values.extra_cheese}
+              // onChange = {onChange} 
+              name = "extra_cheese"
+              value = "extra_cheese"
               type="checkbox" />
               Extra Cheese
             </label> 
@@ -210,7 +212,7 @@ value = type == 'checkbox' ? checked : value
             <label>Special Instructions: <br />
               <input 
                 value = {values.specialText}
-                onChange = {onChange}
+                // onChange = {onChange}
                 id="special-text" 
                 name="special-text" 
                 type="text" 
