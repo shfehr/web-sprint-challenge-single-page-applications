@@ -73,7 +73,7 @@ function Order(props) {
       setValues({...values, [evt.target.name]: evt.target.value})
     }
 
-    if (evt.target.name === "name") {
+    if (evt.target.name === "orderName") {
       yup
       .reach(userSchema, evt.target.name)
       .validate(evt.target.value)
@@ -91,12 +91,12 @@ function Order(props) {
   const onSubmit = evt => {
     evt.preventDefault()
     // console.log(values)
-    yup
-      .reach(userSchema, evt.target.name)
-      .validate(evt.target.value)
-      .then(() => setFormErrors({ ...formErrors, [evt.target.name]: ''}))
-      .catch((err) => setFormErrors({ ...formErrors, [evt.target.name]: err.errors[0]}))
-    console.log(formErrors)
+    // yup
+    //   .reach(userSchema, evt.target.name)
+    //   .validate(evt.target.value)
+    //   .then(() => setFormErrors({ ...formErrors, [evt.target.name]: ''}))
+    //   .catch((err) => setFormErrors({ ...formErrors, [evt.target.name]: err.errors[0]}))
+    // console.log(formErrors)
     axios.post('https://reqres.in/api/orders', values)
       .then(response => {
         setValues(initialFormValues)
