@@ -9,7 +9,7 @@ import axios from "axios";
 const style = { margin: '1rem', padding: '0.5rem', border: '2px solid black'}
 
 const errorMessage = {
-  usernameMin: 'name must be at least 2 characters',
+  orderNameMin: 'name must be at least 2 characters',
 }
 
 const initialErrors = {
@@ -17,6 +17,8 @@ const initialErrors = {
   // size: '',
   // specialText: '',
 }
+
+
 
 const initialFormValues = {
   orderName: '',
@@ -30,24 +32,10 @@ const initialFormValues = {
 }
 
 const userSchema = yup.object().shape({
-  username : yup
+  orderName : yup
   .string()
-  .trim()
-  // .required(errorMessage.usernameRequired)
-  .min(2, errorMessage.usernameMin),
-//   // 'size-dropdown': yup
-//   // .oneOf(['','small', 'medium', 'large']),
-//   // 'special-text': yup
-//   // .string()
-//   // .trim(),
-//   // 'onion':yup
-//   // .boolean(),
-//   // 'pepperoni':yup
-//   // .boolean(),
-//   // 'mushrooms':yup
-//   // .boolean(),
-//   // 'extra-cheese':yup
-//   // .boolean()
+  //.required(errorMessage.usernameRequired)
+  .min(2, errorMessage.orderNameMin),
  })
 
 function Home(props) {
@@ -71,42 +59,46 @@ function Checklist() {
 }
 
 function Order(props) {
+  const [formErrors, setFormErrors] = useState(initialErrors)
   const [values, setValues] = useState(initialFormValues)
 
+  // console.log(initialErrors)
+  
   const onChange = evt => { 
-    // evt.persist();
-    //   validateChange(evt);
-    //   setValues({
-    //     ...values,
-    //     [evt.target.name]:
-    //       evt.target.type === "checkbox" ? evt.target.checked : evt.target.value,
-    //   });
-  let { type, name, value, checked} = evt.target
-  
-  value = type === 'checkbox' ? checked : value
-  // console.log(name, value)
-  setValues({...values, [name]: value })
-  // console.log(evt)
-  
-    // if (evt.target.id === 'name-input') {
-    //   setValues((prevState) =>({...prevState, username: evt.target.value }))
-    //   // validateChange(evt.target)
-    // }
-    // if (evt.target.id === 'size-dropdown') {
-    //   setValues((prevState) =>({...prevState, size: evt.target.value}))
-    // }
-  
-    // if (evt.target.id ==='special-text') {
-    //   setValues((prevState) =>({...prevState, specialText: evt.target.value}))
-    // }
-    setValues({...values, [name]: value })
-  
+    // let { type, name, value, checked} = evt.target
+
+    if (evt.target.type === "checkbox") {
+      setValues({...values, [evt.target.name]: !values[evt.target.name]})
+    } else {
+      setValues({...values, [evt.target.name]: evt.target.value})
     }
+
+    if (evt.target.name === "name") {
+      yup
+      .reach(userSchema, evt.target.name)
+      .validate(evt.target.value)
+      .then(() => setFormErrors({ ...formErrors, [evt.target.name]: ''}))
+      .catch((err) => setFormErrors({ ...formErrors, [evt.target.name]: err.errors[0]}))
+
+    }
+  }
+
+  //   value = type === 'checkbox' ? checked : value
+  //   setValues({...values, [name]: value })
+
+  // }
+
   const onSubmit = evt => {
     evt.preventDefault()
+    // console.log(values)
+    yup
+      .reach(userSchema, evt.target.name)
+      .validate(evt.target.value)
+      .then(() => setFormErrors({ ...formErrors, [evt.target.name]: ''}))
+      .catch((err) => setFormErrors({ ...formErrors, [evt.target.name]: err.errors[0]}))
+    console.log(formErrors)
     axios.post('https://reqres.in/api/orders', values)
       .then(response => {
-        console.log(response.data)
         setValues(initialFormValues)
       })
       .catch(error => {
@@ -131,6 +123,7 @@ function Order(props) {
               name="orderName" 
               type="text" 
               placeholder="Type Name" />
+              {formErrors.orderName && (<p>{formErrors.orderName}</p>)}
               <br />
           </label>
         <div>
@@ -222,17 +215,17 @@ function Order(props) {
         </div>
       </div> 
         
-        <input name="order-button" type="submit" />   
+        <input name="order-button"
+               id="order-button" 
+               type="submit" 
+              //  disabled='disabled' 
+               />   
       </form>
   </div>
   </div>
   )
 }
 export default function App()  {
-
-
-
-const [formErrors, setFormErrors] = useState(initialErrors)
 
 // const validateChange = (evt) => {
 //   yup
@@ -252,37 +245,6 @@ const [formErrors, setFormErrors] = useState(initialErrors)
 //       .then(() => setFormErrors({ ...formErrors, [evt.target.name]: ''}))
 //       .catch(() => setFormErrors({ ...formErrors, [evt.target.name]: errorMessage.errors[0]}))
 // }
-
-// const onChange = evt => { 
-//   // evt.persist();
-//   //   validateChange(evt);
-//   //   setValues({
-//   //     ...values,
-//   //     [evt.target.name]:
-//   //       evt.target.type === "checkbox" ? evt.target.checked : evt.target.value,
-//   //   });
-// let { type, name, value, checked} = evt.target
-
-// value = type === 'checkbox' ? checked : value
-// console.log(name, value)
-// setValues({...values, [name]: value })
-// // console.log(evt)
-
-//   // if (evt.target.id === 'name-input') {
-//   //   setValues((prevState) =>({...prevState, username: evt.target.value }))
-//   //   // validateChange(evt.target)
-//   // }
-//   // if (evt.target.id === 'size-dropdown') {
-//   //   setValues((prevState) =>({...prevState, size: evt.target.value}))
-//   // }
-
-//   // if (evt.target.id ==='special-text') {
-//   //   setValues((prevState) =>({...prevState, specialText: evt.target.value}))
-//   // }
-//   // setValues({...values, [name]: value })
-
-//   }
-
  
 
   return (
